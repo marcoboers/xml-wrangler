@@ -12,6 +12,7 @@ use VeeWee\Xml\Dom\Document;
 use InvalidArgumentException;
 use VeeWee\Xml\Reader\Reader;
 use VeeWee\Xml\Reader\Matcher;
+use VeeWee\Xml\Reader\MatchingNode;
 use Saloon\XmlWrangler\Data\Element;
 use Psr\Http\Message\MessageInterface;
 use function VeeWee\Xml\Encoding\xml_decode;
@@ -189,7 +190,7 @@ class XmlReader
 
             $results = function () use ($results): Generator {
                 foreach ($results as $result) {
-                    yield from $this->parseXml($result);
+                    yield from $this->parseXml($result->xml());
                 }
             };
 
@@ -288,7 +289,7 @@ class XmlReader
                         continue;
                     }
 
-                    $element = $this->parseXml($result);
+                    $element = $this->parseXml($result->xml());
 
                     yield $element[array_key_first($element)];
                 }
@@ -328,9 +329,12 @@ class XmlReader
             if (empty($namespaceMap)) {
                 $namespaceFilter = $keepNamespaces ? RemoveNamespaces::unprefixed() : RemoveNamespaces::all();
 
-                $xml = Document::fromXmlString($xml, traverse($namespaceFilter))->toXmlString();
+                $xml = Document::fromXmlString($xml->xml(), traverse($namespaceFilter))->toXmlString();
             } else {
                 $xpathConfigurators[] = namespaces($namespaceMap);
+
+                // Make $xml from MatchingNode into a string
+                $xml = $xml->xml();
             }
 
             $xpath = Document::fromXmlString($xml)->xpath(...$xpathConfigurators);
