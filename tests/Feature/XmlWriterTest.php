@@ -205,6 +205,30 @@ XML
     );
 });
 
+test('when writing nested arrays it will create multiple elements', function () {
+    $xml = XmlWriter::make()
+        ->setXmlStandalone(true)
+        ->write('orders', [
+            'order' => [
+                'title' => '123',
+                'comment' => 'test',
+            ],
+        ]);
+
+    $expected = <<<XML
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<orders>
+  <order>
+    <title>123</title>
+    <comment>test</comment>
+  </order>
+</orders>
+
+XML;
+
+    expect($xml)->toBe($expected);
+});
+
 test('you can use composable elements in the writer', function () {
     $writer = new XmlWriter;
 
