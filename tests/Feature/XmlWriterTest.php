@@ -145,9 +145,9 @@ test('you cannot use numeric keys in the root element', function (array $content
 
     $writer->write('root', $content);
 })->with([
-    fn() => [1, 2, 3],
-    fn() => ['a'],
-    fn() => ['a' => 'b', 2],
+    fn () => [1, 2, 3],
+    fn () => ['a'],
+    fn () => ['a' => 'b', 2],
 ]);
 
 test('you can use an array of values for multiple elements', function () {
