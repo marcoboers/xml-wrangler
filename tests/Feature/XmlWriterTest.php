@@ -145,9 +145,9 @@ test('you cannot use numeric keys in the root element', function (array $content
 
     $writer->write('root', $content);
 })->with([
-    fn () => [1, 2, 3],
-    fn () => ['a'],
-    fn () => ['a' => 'b', 2],
+    fn() => [1, 2, 3],
+    fn() => ['a'],
+    fn() => ['a' => 'b', 2],
 ]);
 
 test('you can use an array of values for multiple elements', function () {
@@ -203,6 +203,30 @@ test('the root element content can be merged with the main content', function ()
 
 XML
     );
+});
+
+test('when writing nested arrays it will create multiple elements', function () {
+    $xml = XmlWriter::make()
+        ->setXmlStandalone(true)
+        ->write('orders', [
+            'order' => [
+                'title' => '123',
+                'comment' => 'test',
+            ],
+        ]);
+
+    $expected = <<<XML
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<orders>
+  <order>
+    <title>123</title>
+    <comment>test</comment>
+  </order>
+</orders>
+
+XML;
+
+    expect($xml)->toBe($expected);
 });
 
 test('you can use composable elements in the writer', function () {
