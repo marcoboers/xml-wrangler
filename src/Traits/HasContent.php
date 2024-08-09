@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Saloon\XmlWrangler\Traits;
 
+use Saloon\XmlWrangler\Data\Element;
+
 trait HasContent
 {
     /**
